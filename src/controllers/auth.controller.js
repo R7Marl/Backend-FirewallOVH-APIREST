@@ -1,17 +1,98 @@
 import User from "../models/User.js";
 import { hashPassword, comparePassword } from "../utils/bcrypt.js";
 import { generateToken } from "../utils/jwt.js";
-export const login = (req, res) => {
-    const { email, password } = req.body;
-    User.findOne({ email }).then((user) => {
-        if(!user) return res.status(400).json({ message: "Usuario no encontrado" });
-        const isPasswordCorrect = comparePassword(password, user.password);
-        if(!isPasswordCorrect) return res.status(400).json({ message: "Contraseña incorrecta" });
+import { body, validationResult } from 'express-validator';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
 
-        const token = generateToken(user);
-        return res.status(200).json({ message: "Usuario logueado", token });
-    })
-}
+// Rate limiter setup
+const rateLimiter = new RateLimiterMemory({
+  points: 999, // Número de intentos
+  duration: 3600, // 1 hora en segundos
+});
+
+// Middleware de validación
+const validateLoginInput = [
+  body('email')
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Por favor ingrese un email válido'),
+  body('password')
+    .trim()
+    .notEmpty()
+    .withMessage('La contraseña es requerida'),
+];
+
+// Handler de login
+export const login = async (req, res) => {
+    console.log(req.body)
+  try {
+    // Validar input
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        message: 'Error de validación', 
+        errors: errors.array() 
+      });
+    }
+
+    const { email, password } = req.body;
+
+    // Rate limiting check
+    try {
+      const ipAddress = req.ip;
+      await rateLimiter.consume(ipAddress);
+    } catch (error) {
+      return res.status(429).json({
+        message: 'Demasiados intentos de login. Por favor intente más tarde'
+      });
+    }
+
+    // Buscar usuario
+    const user = await User.findOne({ where: {
+        email: email
+    }});
+    if (!user) {
+      return res.status(400).json({ 
+        message: 'Credenciales inválidas'
+      });
+    }
+
+    // Verificar contraseña
+    const isPasswordCorrect = await comparePassword(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
+        message: 'Credenciales inválidas'
+      });
+    }
+
+    // Generar token JWT
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      role: user.role
+    });
+
+    // Enviar respuesta
+    return res.status(200).json({
+      message: 'Login exitoso',
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name
+      }
+    });
+
+  } catch (error) {
+    console.error('Error en login:', error);
+    return res.status(500).json({
+      message: 'Error interno del servidor'
+    });
+  }
+};
+
 
 export const register = async (req, res) => {
     try {
@@ -36,14 +117,20 @@ export const register = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role: role || 'user'
+            role: role || 'superadmin'
         });
 
         const token = generateToken(user);
 
         return res.status(201).json({
             message: "Usuario registrado exitosamente",
-            token
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                name: user.name
+            }
         });
 
     } catch (error) {
@@ -51,6 +138,19 @@ export const register = async (req, res) => {
         return res.status(500).json({
             message: "Error al registrar usuario",
             error: error.message
+        });
+    }
+}
+
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error en getUsers:', error);
+        res.status(500).json({ 
+            message: "Error al obtener todos los usuarios",
+            error: error.message 
         });
     }
 }

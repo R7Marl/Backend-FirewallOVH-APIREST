@@ -24,9 +24,14 @@ const Server = sequelize.define(
             allowNull: false,
             unique: true
         },
+        status: {
+            type: DataTypes.ENUM('active', 'inactive'),
+            allowNull: false,
+            defaultValue: 'active'
+        },
         userId: {
             type: DataTypes.UUID,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'users',
                 key: 'id'

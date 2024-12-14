@@ -1,4 +1,5 @@
 import ovh from "ovh";
+import Server from "../models/Server.js";
 const client = ovh({
     endpoint: process.env.END_POINT,
     appKey: process.env.APP_KEY,
@@ -11,7 +12,10 @@ client.re = promisify(client.request);
 //! ------------------------------------------------- FIREWALL --------------------------------------------------------------------- //
 
 export const getFirewall = async (req, res) => {
-  const { ipBlock, IP } = req.body;
+  const { serverId } = req.query;
+  const server = await Server.findOne({ where: { id: serverId } });
+  const ipBlock = server.ipBlock;
+  const IP = server.ip;
   let firewall = [];
   try {
     let get = await client.re(
@@ -26,7 +30,7 @@ export const getFirewall = async (req, res) => {
         )
       );
     }
-    res.status(200).json({ firewall });
+    res.status(200).json(firewall);
   } catch (error) {
     res.status(400).json({ code: error });
   }
@@ -34,8 +38,6 @@ export const getFirewall = async (req, res) => {
 
 export const addFirewallRule = async (req, res) => {
   const {
-    ipBlock,
-    IP,
     action,
     sequence,
     destination,
@@ -43,7 +45,11 @@ export const addFirewallRule = async (req, res) => {
     sourceip,
     sorceport,
   } = req.body;
-
+  const { serverId } = req.query;
+  const server = await Server.findOne({ where: { id: serverId } });
+  const ipBlock = server.ipBlock;
+  const IP = server.ip;
+  console.log(req.body);
   try {
     await client.re(
       "POST",
@@ -64,4 +70,35 @@ export const addFirewallRule = async (req, res) => {
   }
 };
 
+export const deleteFirewallRule = async(req, res) => {
+  const { serverId, ruleId } = req.query;
+  const server = await Server.findOne({ where: { id: serverId } });
+  const ipBlock = server.ipBlock;
+  const IP = server.ip;
+  try {
+    await client.re(
+      "DELETE",
+      `/ip/${encodeURIComponent(ipBlock)}/firewall/${IP}/rule/${ruleId}`
+    );
+    res.status(200).json({ code: "Successfully rule deleted!" });
+  } catch (error) {
+    res.status(400).json({ code: error });
+  }
+}
+
+export const deleteFirewallGameRule = async(req, res) => {
+  const { serverId, ruleId } = req.query;
+  const server = await Server.findOne({ where: { id: serverId } });
+  const ipBlock = server.ipBlock;
+  const IP = server.ip;
+  try {
+    await client.re(
+      "DELETE",
+      `/ip/${encodeURIComponent(ipBlock)}/game/${IP}/rule/${ruleId}`
+    );
+    res.status(200).json({ code: "Successfully rule deleted!" });
+  } catch (error) {
+    res.status(400).json({ code: error });
+  }
+}
 //! ------------------------------------------------- FIN FIREWALL --------------------------------------------------------------------- //
