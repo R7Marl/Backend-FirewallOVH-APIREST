@@ -1,4 +1,4 @@
-name: API Deply
+name: Deploy Node.js Docker App
 
 on:
   push:
@@ -16,12 +16,20 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
+          cp /root/api/.env /root/env_backup
+          
           mkdir -p /root/temp_api
+          
           git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git /root/temp_api
           
-          cp -r /root/temp_api/* /root/api/
+          cd /root/temp_api
+          rm -f .env
+          cp -r * /root/api/
+          
+          cp /root/env_backup /root/api/.env
           
           rm -rf /root/temp_api
+          rm /root/env_backup
           
           cd /root/api
           docker compose stop api
