@@ -20,5 +20,5 @@ database.sync({ alter: true }).then(() => {
     console.log('[HOSTLY ECOMMERCE]:[DATABASE]: Base de datos sincronizada con éxito.');
   }).catch(err => console.error('[HOSTLY ECOMMERCE]:[DATABASE]: Error sincronizando la base de datos:', err));
 appRoutes(app);
-app.listen(3000);
+app.listen(process.env.PORT);
 console.log("Servidor encendido en el puerto 3000");

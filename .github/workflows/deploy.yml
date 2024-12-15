@@ -1,0 +1,31 @@
+name: API Deply
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          mkdir -p /root/temp_api
+          git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git /root/temp_api
+          
+          cp -r /root/temp_api/* /root/api/
+          
+          rm -rf /root/temp_api
+          
+          cd /root/api
+          docker compose stop api
+          
+          docker compose up -d --build
+          
+          docker image prune -f --filter "label!=db"
