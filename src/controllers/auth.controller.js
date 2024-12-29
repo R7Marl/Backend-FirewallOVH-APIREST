@@ -157,7 +157,8 @@ export const getUsers = async (req, res) => {
 
 export const updatePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
-  const user = req.user;
+  const { id } = req.user;
+  const user = await User.findOne({ where: { id } });
   if (!user) {
     return res.status(401).json({ 
       message: "No autorizado" 
@@ -165,31 +166,70 @@ export const updatePassword = async (req, res) => {
   }
   if (!oldPassword || !newPassword) {
     return res.status(400).json({ 
-      message: "Todos los campos son obligatorios" 
+      message: "You must provide all fields"
     });
   }
   try {
     const isPasswordCorrect = comparePassword(oldPassword, user.password);
     if (!isPasswordCorrect) {
       return res.status(400).json({ 
-        message: "Contraseña actual incorrecta" 
+        message: "Incorrect old password"
       });
     }
     if(oldPassword === newPassword) {
       return res.status(400).json({ 
-        message: "La nueva contraseña no puede ser la misma que la actual" 
+        message: "The new password must be different from the old one"
       });
     }
     const hashedPassword = hashPassword(newPassword);
     await User.update({ password: hashedPassword }, { where: { id: user.id } });
     return res.status(200).json({ 
-      message: "Contraseña actualizada correctamente" 
+      message: "Password updated successfully"
     });
   } catch (error) {
     console.error('Error en updatePassword:', error);
     return res.status(500).json({ 
-      message: "Error al actualizar contraseña",
+      message: "Error updating password",
       error: error.message 
     });
   }
+  }
+  export const updateName = async (req, res) => {
+    const { id } = req.user;
+    const { name } = req.body;
+    if(!id) {
+      return res.status(401).json({ 
+        message: "You are not authorized" 
+      });
+    }
+    if (!name) {
+      return res.status(400).json({ 
+        message: "You must provide all fields"
+      });
+    }
+    try {
+     await User.update({ name }, { where: { id: id } });
+     const userUpdated = await User.findOne({ where: { id: id } });
+      return res.status(200).json({ 
+        message: "Name updated successfully",
+        user: userUpdated
+      });
+    } catch (error) {
+      console.error('Error en updateName:', error);
+      return res.status(500).json({ 
+        message: "Error updating name",
+        error: error.message 
+      });
+    }
+  }
+
+export const getUser = async (req, res) => {
+  const { id } = req.user;
+  const user = await User.findOne({ where: { id } });
+  if (!user) {
+    return res.status(401).json({ 
+      message: "You are not authorized" 
+    });
+  }
+  res.status(200).json(user);
 }

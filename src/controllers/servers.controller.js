@@ -80,13 +80,11 @@ export const createServer = async (req, res) => {
 
 export const deleteServer = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { id: userId } = req.user;
+        const { serverId } = req.query;
         
         const deleted = await Server.destroy({
             where: {
-                id,
-                userId
+                id: serverId
             }
         });
         
