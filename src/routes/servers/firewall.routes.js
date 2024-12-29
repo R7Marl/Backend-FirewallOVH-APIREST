@@ -5,10 +5,8 @@ import {
   enableGameFirewall,
 } from "../../controllers/game.controllers.js";
 import { getFirewall, addFirewallRule, deleteFirewallRule, deleteFirewallGameRule } from "../../controllers/fw.controllers.js";
-import { validatorIP } from "../../middleware/validations.middleware.js";
 import { createServer, deleteServer, getAllServers, getServerById, getServerByUser } from "../../controllers/servers.controller.js";
 import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware.js";
-import Server from "../../models/Server.js";
 const router = Router();
 //! --------------------------------------- Rutas firewall game --------------------------------------------------- //
 router.get("/getfirewallgame", getFirewallGame);
