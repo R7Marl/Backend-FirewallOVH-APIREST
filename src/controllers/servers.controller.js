@@ -86,7 +86,7 @@ export const deleteServer = async (req, res) => {
         const deleted = await Server.destroy({
             where: {
                 id,
-                userIdr
+                userId
             }
         });
         
