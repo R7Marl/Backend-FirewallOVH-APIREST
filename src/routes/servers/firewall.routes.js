@@ -7,6 +7,7 @@ import {
 import { getFirewall, addFirewallRule, deleteFirewallRule, deleteFirewallGameRule } from "../../controllers/fw.controllers.js";
 import { createServer, deleteServer, getAllServers, getServerById, getServerByUser } from "../../controllers/servers.controller.js";
 import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware.js";
+import { getNetworkStatistics } from "../../controllers/network.controller.js";
 const router = Router();
 //! --------------------------------------- Rutas firewall game --------------------------------------------------- //
 router.get("/getfirewallgame", getFirewallGame);
@@ -20,6 +21,13 @@ router.get("/getfirewall", authMiddleware, getFirewall);
 router.post("/addfirewallrule", authMiddleware, addFirewallRule);
 router.delete("/deletefirewallrule", authMiddleware, deleteFirewallRule);
 //! --------------------------------------- Fin rutas firewall ----------------------------------------------- //
+
+
+// Network
+
+router.get("/getNetworkStatistics", authMiddleware, getNetworkStatistics);
+
+// Admin
 
 router.get("/getServerByUser", authMiddleware, getServerByUser);
 router.get("/getServerById", authMiddleware, getServerById);
