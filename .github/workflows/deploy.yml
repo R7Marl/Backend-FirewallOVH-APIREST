@@ -16,7 +16,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          cp /root/api/.env /root/env_backup
+          cp /root/firewall-ambientes/FirewallManager-Backend-prod/.env /root/env_backup
           
           mkdir -p /root/temp_api
           
@@ -24,16 +24,16 @@ jobs:
           
           cd /root/temp_api
           rm -f .env
-          cp -r * /root/api/
+          cp -r * /root/firewall-ambientes/FirewallManager-Backend-prod/
           
-          cp /root/env_backup /root/api/.env
+          cp /root/env_backup /root/firewall-ambientes/FirewallManager-Backend-prod/.env
           
           rm -rf /root/temp_api
           rm /root/env_backup
           
-          cd /root/api
+          cd /root/firewall-ambientes/FirewallManager-Backend-prod
           docker compose stop api
-          
           docker compose up -d --build
           
+          # Limpiar imágenes no utilizadas
           docker image prune -f --filter "label!=db"
