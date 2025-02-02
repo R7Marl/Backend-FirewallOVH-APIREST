@@ -8,15 +8,14 @@ const client = ovh({
 import { promisify } from "util";
 client.re = promisify(client.request);
 import Server from "../models/Server.js";
+import { sleep } from "../common/utils.js";
 
 // Comienzo de rutas.
 
 //! -------------------------------------------------- RUTAS DE FIREWALL GAME -------------------------------------------------------- //
 export const getFirewallGame = async (req, res) => {
   const serverId = req.query.serverId;
-  const server = await Server.findOne({ where: { id: serverId } });
-  const ipBlock = server.ipBlock;
-  const ip = server.ip;
+  const { ipBlock, ip } = await Server.findByPk(serverId);
   let firewallGame = [];
   try {
     let getIP = await client.re(
@@ -31,7 +30,6 @@ export const getFirewallGame = async (req, res) => {
         )
       );
     }
-    console.log(firewallGame);
     res.status(200).json(firewallGame);
   } catch (error) {
     res.status(400).json({ code: "Error "+error})
@@ -69,5 +67,22 @@ export const enableGameFirewall = async (req, res) => {
     } catch (error) {
     res.status(400).json({ code: `Error\n ${error}`});
     }
+}
+
+export const bulkDeleteGameRule = async (req, res) => {
+  const { serverId } = req.query;
+  if (!serverId) return res.status(400).json({ code: "ServerId is required" });
+  if (!req.body) return res.status(400).json({ code: "Rules are required" });
+  try { 
+    const { ipBlock, ip } = await Server.findOne({ where: { id: serverId } });
+    const rules = req.body;
+    for(let i = 0; i < rules.length; i++) {
+      await client.re('DELETE', `/ip/${encodeURIComponent(ipBlock)}/game/${ip}/rule/${rules[i]}`);
+      sleep(1500);
+    } 
+    res.status(200).json({ code: "Successfully Deleted Selected Rules" });
+  } catch (error) {
+    res.status(400).json({ code: `Error\n ${error}`});
+  }
 }
 //! ------------------------------------------------- FIN FIREWALL GAME ------------------------------------------------------------ //
