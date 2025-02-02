@@ -2,38 +2,48 @@ name: Deploy Node.js Docker App
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main    # Rama de producción
+      - develop # Rama de desarrollo
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Deploy to VPS
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script: |
-          cp /root/firewall-ambientes/FirewallManager-Backend-prod/.env /root/env_backup
-          
-          mkdir -p /root/temp_api
-          
-          git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git /root/temp_api
-          
-          cd /root/temp_api
-          rm -f .env
-          cp -r * /root/firewall-ambientes/FirewallManager-Backend-prod/
-          
-          cp /root/env_backup /root/firewall-ambientes/FirewallManager-Backend-prod/.env
-          
-          rm -rf /root/temp_api
-          rm /root/env_backup
-          
-          cd /root/firewall-ambientes/FirewallManager-Backend-prod
-          docker compose stop api
-          docker compose up -d --build
-          
-          # Limpiar imágenes no utilizadas
-          docker image prune -f --filter "label!=db"
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            if [ "${{ github.ref_name }}" == "main" ]; then
+              FOLDER_NAME="FirewallManager-Backend-prod"
+            elif [ "${{ github.ref_name }}" == "develop" ]; then
+              FOLDER_NAME="FirewallManager-Backend-develop"
+            else
+              echo "Rama no reconocida: ${{ github.ref_name }}"
+              exit 1
+            fi
+
+            cp /root/firewall-ambientes/$FOLDER_NAME/.env /root/env_backup
+
+            mkdir -p /root/temp_api
+
+            git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git /root/temp_api
+
+            cd /root/temp_api
+            rm -f .env
+            cp -r * /root/firewall-ambientes/$FOLDER_NAME/
+
+            cp /root/env_backup /root/firewall-ambientes/$FOLDER_NAME/.env
+
+            rm -rf /root/temp_api
+            rm /root/env_backup
+
+            cd /root/firewall-ambientes/$FOLDER_NAME
+            docker compose stop api
+            docker compose up -d --build
+
+            docker image prune -f --filter "label!=db"
