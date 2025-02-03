@@ -1,0 +1,78 @@
+import "dotenv/config";
+import express from "express";
+import database from "@/config/database";
+import cors from "cors";
+import setupRoutes from "@/routes/index";
+import i18n from "i18next";
+import Backend from "i18next-fs-backend";
+import { handle, LanguageDetector } from "i18next-http-middleware";
+import path from "path";
+
+i18n
+  .use(Backend)
+  .use(LanguageDetector)
+  .init({
+    backend: {
+      loadPath: path.join("src/locales", "{{lng}}.json"),
+    },
+    fallbackLng: "en",
+    preload: ["en", "es"],
+    detection: {
+      order: ["querystring", "cookie", "header"],
+      lookupHeader: "accept-language",
+      caches: ["cookie"],
+    },
+    supportedLngs: ["en", "es"],
+    nonExplicitSupportedLngs: true,
+    load: "languageOnly",
+  });
+
+const app = express();
+
+app.use(express.json());
+app.use(handle(i18n));
+
+app.use((req, res, next) => {
+  console.log("requested lang: " + req.language);
+});
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Accept",
+      "Authorization",
+      "Cache-Control",
+      "Content-Type",
+      "DNT",
+      "If-Modified-Since",
+      "Keep-Alive",
+      "Origin",
+      "User-Agent",
+      "X-Requested-With",
+    ],
+  }),
+);
+
+app.use(express.urlencoded({ extended: true }));
+
+database
+  .sync()
+  .then(() => {
+    console.log(
+      "[HOSTLY ECOMMERCE]:[DATABASE]: Base de datos sincronizada con éxito.",
+    );
+  })
+  .catch((err: unknown) => {
+    console.error(
+      "[HOSTLY ECOMMERCE]:[DATABASE]: Error sincronizando la base de datos:",
+      err,
+    );
+  });
+
+setupRoutes(app);
+
+app.listen(process.env.PORT);
+console.log("Servidor encendido en el puerto " + process.env.PORT);

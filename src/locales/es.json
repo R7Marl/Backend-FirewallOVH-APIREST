@@ -1,0 +1,27 @@
+{
+  "errors": {
+    "unauthorized": "No autorizado",
+    "fields-required": "Todos los campos son obligatorios",
+    "internal": "Error interno del servidor",
+    "invalid-credentials": "Credenciales inválidas",
+    "rate-limit": "Demasiados intentos de inicio de sesión. Intente nuevamente más tarde",
+    "incorrect-old-password": "Contraseña antigua incorrecta",
+    "new-password-same-as-old": "La nueva contraseña debe ser diferente de la antigua",
+    "provide-all-fields": "Debe proporcionar todos los campos",
+    "registering-user": "Error al registrar usuario",
+    "fetching-users": "Error al obtener usuarios",
+    "updating-password": "Error al actualizar la contraseña",
+    "updating-name": "Error al actualizar el nombre",
+    "already-exists": "El nombre de usuario ya fue registrado",
+    "not-authorized": "No estás autorizado"
+  },
+  "success": {
+    "login": "Inicio de sesión exitoso",
+    "user-registered": "Usuario registrado exitosamente",
+    "password-updated": "Contraseña actualizada exitosamente",
+    "name-updated": "Nombre actualizado exitosamente"
+  },
+  "validation": {
+    "error": "Error de validación"
+  }
+}

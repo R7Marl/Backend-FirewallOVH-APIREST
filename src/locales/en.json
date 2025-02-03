@@ -1,0 +1,27 @@
+{
+  "errors": {
+    "unauthorized": "Unauthorized",
+    "fields-required": "All fields are required",
+    "internal": "Internal server error",
+    "invalid-credentials": "Invalid credentials",
+    "rate-limit": "Too many login attempts. Please try again later",
+    "incorrect-old-password": "Incorrect old password",
+    "new-password-same-as-old": "The new password must be different from the old one",
+    "provide-all-fields": "You must provide all fields",
+    "registering-user": "Error registering user",
+    "fetching-users": "Error fetching users",
+    "updating-password": "Error updating password",
+    "updating-name": "Error updating name",
+    "already-exists": "The username is already registered",
+    "not-authorized": "You are not authorized"
+  },
+  "success": {
+    "login": "Login successful",
+    "user-registered": "User registered successfully",
+    "password-updated": "Password updated successfully",
+    "name-updated": "Name updated successfully"
+  },
+  "validation": {
+    "error": "Validation error"
+  }
+}
