@@ -17,33 +17,45 @@ jobs:
           script: |
             if [ "${{ github.ref_name }}" == "main" ]; then
               FOLDER_NAME="FirewallManager-Backend-prod"
+              BRANCH_NAME="main"
             elif [ "${{ github.ref_name }}" == "develop" ]; then
               FOLDER_NAME="FirewallManager-Backend-develop"
+              BRANCH_NAME="develop"
             else
               echo "Rama no reconocida: ${{ github.ref_name }}"
               exit 1
             fi
             
+            # Backup .env file
             cp /root/firewall-ambientes/$FOLDER_NAME/.env /root/env_backup
             
+            # Create temporary directory for new code
             mkdir -p /root/temp_api
             
-            git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git /root/temp_api
+            # Clone repository with specific branch
+            git clone --branch $BRANCH_NAME https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git /root/temp_api
             
             cd /root/temp_api
             
+            # Remove .env from new clone
             rm -f .env
             
+            # Copy all files EXCEPT docker-compose.yml to existing folder
             rsync -av --delete --exclude 'docker-compose.yml' * /root/firewall-ambientes/$FOLDER_NAME/
             
+            # Restore .env file
             cp /root/env_backup /root/firewall-ambientes/$FOLDER_NAME/.env
             
+            # Clean up temporary files
             rm -rf /root/temp_api
             rm /root/env_backup
             
+            # Change to project directory
             cd /root/firewall-ambientes/$FOLDER_NAME
             
+            # Stop and rebuild containers
             docker compose stop api
             docker compose up -d --build
             
+            # Prune images, excluding those with 'db' label
             docker image prune -f --filter "label!=db"
