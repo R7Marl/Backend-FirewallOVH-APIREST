@@ -6,6 +6,12 @@ import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+    origin: 'https://firewall.hostly.network',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Accept', 'Authorization', 'Cache-Control', 'Content-Type', 'DNT', 'If-Modified-Since', 'Keep-Alive', 'Origin', 'User-Agent', 'X-Requested-With']
+}));
 app.use(express.urlencoded({ extended: true }));
 //app.use(cors());
 
