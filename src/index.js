@@ -3,7 +3,7 @@ import express from "express";
 import appRoutes from "./routes/index.routes.js";
 import database from "./config/database.js";
 import cors from "cors";
-
+// develop
 const app = express();
 app.use(express.json());
 app.use(cors({
