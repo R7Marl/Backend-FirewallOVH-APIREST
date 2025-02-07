@@ -5,9 +5,9 @@ services:
     container_name: app-develop
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
-      - "${PORT}:${PORT}"
+      - "4000:4000"
     env_file:
       - .env.development
     depends_on:
