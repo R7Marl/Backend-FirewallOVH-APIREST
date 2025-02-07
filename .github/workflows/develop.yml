@@ -17,11 +17,13 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         script: |                    
           cd /root/FirewallAmbientesV2/backend-api
-
+          git config --global user.name "${{ secrets.GIT_USERNAME }}"
+          git config --global user.email "noreply@github.com"
+          git remote set-url origin https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git
           git fetch --all
           git reset --hard origin/develop
           git pull origin develop
 
-          docker compose -f docker-compose.develop.yml up -d --build
+          docker compose -f docker-compose.dev.yml up -d --build
 
           docker image prune -f
