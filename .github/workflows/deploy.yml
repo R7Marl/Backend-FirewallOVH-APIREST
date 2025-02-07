@@ -18,6 +18,10 @@ jobs:
         script: |                    
           cd /root/FirewallAmbientesV2/backend-api
 
+          git config --global user.name "${{ secrets.GIT_USERNAME }}"
+          git config --global user.email "noreply@github.com"
+          git remote set-url origin https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_TOKEN }}@github.com/Hostly-Network/Backend-FirewallOVH-APIREST.git
+
           git fetch --all
           git reset --hard origin/main
           git pull origin main
