@@ -1,8 +1,8 @@
-name: Deploy Node.js Docker App (Production)
+name: Deploy Node.js Docker App (Develop)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
 
 jobs:
   deploy:
@@ -19,8 +19,9 @@ jobs:
           cd /root/FirewallAmbientesV2/backend-api
 
           git fetch --all
-          git reset --hard origin/main
-          git pull origin main
+          git reset --hard origin/develop
+          git pull origin develop
 
-          docker compose -f docker-compose.yml up -d --build
-          docker image prune -fge prune -f --filter "label!=db"
+          docker compose -f docker-compose.develop.yml up -d --build
+
+          docker image prune -f

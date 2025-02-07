@@ -4,10 +4,10 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --only=development
 
 COPY . .
 
 EXPOSE ${PORT}
 
-CMD ["node", "src/main.js"]
+CMD ["npm", "run", "dev"]
