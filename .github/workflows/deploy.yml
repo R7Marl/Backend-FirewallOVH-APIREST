@@ -27,4 +27,4 @@ jobs:
           git pull origin main
 
           docker compose -f docker-compose.yml up -d --build
-          docker image prune -fge prune -f --filter "label!=db"
+          docker image prune -f
