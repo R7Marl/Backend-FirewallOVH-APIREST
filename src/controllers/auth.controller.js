@@ -126,11 +126,11 @@ export const register = async (req, res) => {
             role: role || 'user'
         });
 
-        const token = generateToken(user);
+        const tokenJwt = generateToken(user);
 
         return res.status(201).json({
             message: "Usuario registrado exitosamente",
-            token,
+            tokenJwt,
             user: {
                 id: user.id,
                 email: user.email,
