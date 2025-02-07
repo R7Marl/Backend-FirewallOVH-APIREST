@@ -1,6 +1,8 @@
 version: "3.8"
+
 services:
   app-develop:
+    container_name: app-develop
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,9 +11,10 @@ services:
     env_file:
       - .env.development
     depends_on:
-      - mysql
+      - mysql-develop
     networks:
       - backend
+    restart: always
 
   mysql-develop:
     image: mysql:8.0
@@ -22,14 +25,13 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    env_file:
-      - .env.development
     ports:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - backend
+
 networks:
   backend:
     driver: bridge
