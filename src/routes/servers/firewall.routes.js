@@ -3,6 +3,7 @@ import {
   getFirewallGame,
   addGameRule,
   enableGameFirewall,
+  bulkDeleteGameRule,
 } from "../../controllers/game.controllers.js";
 import { getFirewall, addFirewallRule, deleteFirewallRule, deleteFirewallGameRule } from "../../controllers/fw.controllers.js";
 import { createServer, deleteServer, getAllServers, getServerById, getServerByUser } from "../../controllers/servers.controller.js";
@@ -10,10 +11,11 @@ import { adminMiddleware, authMiddleware } from "../../middleware/auth.middlewar
 import { getNetworkStatistics } from "../../controllers/network.controller.js";
 const router = Router();
 //! --------------------------------------- Rutas firewall game --------------------------------------------------- //
-router.get("/getfirewallgame", getFirewallGame);
+router.get("/getfirewallgame", authMiddleware, getFirewallGame);
 router.post("/addgamerule", authMiddleware, addGameRule);
 router.put("/enablegamefirewall", authMiddleware, enableGameFirewall);
 router.delete("/deletegamerule", authMiddleware, deleteFirewallGameRule);
+router.delete("/bulkdeletefirewallrule", authMiddleware, bulkDeleteGameRule);
 //! --------------------------------------- Fin rutas firewall game ----------------------------------------------- //
 
 //! -------------------------------------- Inicio rutas firewall -------------------------------------------------- //

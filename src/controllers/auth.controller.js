@@ -1,3 +1,4 @@
+import { validateCaptcha } from "../common/utils.js";
 import User from "../models/User.js";
 import { hashPassword, comparePassword } from "../utils/bcrypt.js";
 import { generateToken } from "../utils/jwt.js";
@@ -96,14 +97,19 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role, token } = req.body;
 
-        if (!name || !email || !password) {
+        if (!name || !email || !password || !token) {
             return res.status(400).json({ 
                 message: "Todos los campos son obligatorios" 
             });
         }
-
+        const captcha = await validateCaptcha(token);
+        if(!captcha) {
+          return res.status(400).json({ 
+            message: "El token de captcha no es válido" 
+          });
+        }
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
             return res.status(400).json({ 
@@ -120,11 +126,11 @@ export const register = async (req, res) => {
             role: role || 'user'
         });
 
-        const token = generateToken(user);
+        const tokenJwt = generateToken(user);
 
         return res.status(201).json({
             message: "Usuario registrado exitosamente",
-            token,
+            tokenJwt,
             user: {
                 id: user.id,
                 email: user.email,
