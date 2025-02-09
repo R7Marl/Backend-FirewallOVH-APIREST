@@ -27,7 +27,7 @@ services:
     ports:
       - "3308:3306"
     volumes:
-      - db_data:/var/lib/mysql
+      - prod_db_data:/var/lib/mysql
     networks:
       - backend
 networks:
@@ -35,4 +35,4 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:
+  prod_db_data:
