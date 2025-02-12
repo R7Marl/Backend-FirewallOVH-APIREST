@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { authMiddleware } from "../../middleware/auth.middleware.js";
-import { getAISuggestion } from "../../controllers/ai.controller.js";
+import { authMiddleware } from "../../middleware/auth.middleware";
+import { getAISuggestion } from "../../controllers/ai.controller";
 
 const AIRouter = Router();
 

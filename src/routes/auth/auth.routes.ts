@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getUser, getUsers, login, register, updateName, updatePassword } from "../../controllers/auth.controller.js";
-import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware.js";
-import { validateRecaptcha } from "../../common/utils.js";
+import { getUser, getUsers, login, register, updateName, updatePassword } from "../../controllers/auth.controller";
+import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware";
+import { validateRecaptcha } from "../../common/utils";
 const authRouter = Router();
 
 authRouter.post("/login", login);

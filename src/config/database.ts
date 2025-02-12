@@ -2,10 +2,10 @@ import { Sequelize } from 'sequelize';
 import { config } from 'dotenv';
 config();
 const sequelize = new Sequelize(
-process.env.DB_NAME,
-process.env.DB_USER,
-process.env.DB_PASSWORD, {
-host: process.env.DB_HOST,
+process.env.DB_NAME || 'database',
+process.env.DB_USER || 'user',
+process.env.DB_PASSWORD || 'password', {
+host: process.env.DB_HOST || 'localhost',
 port: 3306,
 dialect: 'mysql',
 logging: false
