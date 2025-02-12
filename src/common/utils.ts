@@ -1,15 +1,20 @@
 import axios from "axios";
-const RECAPTCHA_SECRET_KEY = "6Ld1GtIqAAAAAK9K95ug49-yvoyEnW3toT8k0uzc"
-export const sleep = (ms) => {
+import { Request, Response, NextFunction } from "express";
+const RECAPTCHA_SECRET_KEY: string = "6Ld1GtIqAAAAAK9K95ug49-yvoyEnW3toT8k0uzc";
+
+
+
+
+export const sleep = (ms: number): Promise<void> => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
 
-export const validateRecaptcha = async (req, res, next) => {
-    const token = req.body.recaptchaToken;
+export const validateRecaptcha = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.body?.recaptchaToken as string;
   
     if (!token) {
-      return res.status(400).json({ 
+      res.status(400).json({ 
         success: false, 
         message: 'No se proporcionó token de ReCAPTCHA' 
       });
@@ -29,7 +34,7 @@ export const validateRecaptcha = async (req, res, next) => {
   
       const { success } = response.data;
       if (!success) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: 'Validación de ReCAPTCHA fallida'
         });
@@ -38,7 +43,7 @@ export const validateRecaptcha = async (req, res, next) => {
       next();
     } catch (error) {
       console.error('Error validando ReCAPTCHA:', error);
-      return res.status(500).json({
+      res.status(500).json({
         success: false,
         message: 'Error al validar ReCAPTCHA'
       });

@@ -1,6 +1,6 @@
 import ip from "ip";
-
-function isValidIPBlock(ipBlock) {
+import { Request, Response, NextFunction } from "express";
+function isValidIPBlock(ipBlock: string) {
   const parts = ipBlock.split("/");
   if (parts.length === 2) {
     const ipAddress = parts[0];
@@ -10,7 +10,7 @@ function isValidIPBlock(ipBlock) {
   }
   return false;
 }
-export const validatorIP = async (req, res, next) => {
+export const validatorIP = async (req: Request, res: Response, next: NextFunction) => {
   const { ipBlock, IP } = req.body;
   console.log(req.body);
   try {

@@ -1,13 +1,14 @@
-import { Router } from "express";
-import { getUser, getUsers, login, register, updateName, updatePassword } from "../../controllers/auth.controller.js";
-import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware.js";
-import { validateRecaptcha } from "../../common/utils.js";
-const authRouter = Router();
-
-authRouter.post("/login", login);
-authRouter.post("/register", validateRecaptcha, register);
-authRouter.get('/users', adminMiddleware, getUsers);
-authRouter.get('/user', authMiddleware, getUser);
-authRouter.put('/update-password', authMiddleware, updatePassword);
-authRouter.put('/update-name', authMiddleware, updateName);
-export default authRouter;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var auth_controller_1 = require("../../controllers/auth.controller");
+var auth_middleware_1 = require("../../middleware/auth.middleware");
+var utils_1 = require("../../common/utils");
+var authRouter = (0, express_1.Router)();
+authRouter.post("/login", auth_controller_1.login);
+authRouter.post("/register", utils_1.validateRecaptcha, auth_controller_1.register);
+authRouter.get('/users', auth_middleware_1.adminMiddleware, auth_controller_1.getUsers);
+authRouter.get('/user', auth_middleware_1.authMiddleware, auth_controller_1.getUser);
+authRouter.put('/update-password', auth_middleware_1.authMiddleware, auth_controller_1.updatePassword);
+authRouter.put('/update-name', auth_middleware_1.authMiddleware, auth_controller_1.updateName);
+exports.default = authRouter;
