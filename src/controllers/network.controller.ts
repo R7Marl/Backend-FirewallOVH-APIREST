@@ -6,7 +6,6 @@ import Server from "../models/Server.js";
 import ovh from "ovh";
 import { OVHClient } from "../common/types/index.js";
 
-// Inicializamos el cliente de OVH
 const client: OVHClient = ovh({
   endpoint: process.env.END_POINT,
   appKey: process.env.APP_KEY,

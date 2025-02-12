@@ -260,7 +260,7 @@ export const updateName = async (req: Request, res: Response): Promise<void> => 
  * @param res - Express response object
  */
 export const getUser = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.user as { id: string };
+  const { id } = req?.user as { id: string };
   const user = await User.findOne({ where: { id } });
   if (!user) {
     res.status(401).json({
