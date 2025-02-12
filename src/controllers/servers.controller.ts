@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import Server from "../models/Server";
-import { TokenUser } from "../common/types";
 export const getServerByUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.user as TokenUser;
+        const { id } = req?.user as { id: string };
 
         const servers = await Server.findAll({ where: { userId: id } });
 
@@ -25,7 +24,7 @@ export const getServerByUser = async (req: Request, res: Response): Promise<void
 export const getServerById = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
-        const { id: userId } = req.user as TokenUser;
+        const { id: userId } = req?.user as { id: string };
 
         const server = await Server.findOne({
             where: { id, userId }
@@ -79,7 +78,7 @@ export const createServer = async (req: Request, res: Response): Promise<void> =
 export const deleteServer = async (req: Request, res: Response): Promise<void> => {
     try {
         const { serverId } = req.params;
-        const { id: userId } = req.user as TokenUser;
+        const { id: userId } = req?.user as { id: string };
 
         const deleted = await Server.destroy({
             where: { id: serverId, userId }

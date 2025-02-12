@@ -1,14 +1,4 @@
 import { TFunction } from 'i18next';
-export interface TokenUser {
-    id: string;
-    role: string;
-}
-
-declare module "express-serve-static-core" {
-    interface Request {
-        user?: TokenUser;
-    }
-}
 
 
 export interface AddFirewallRuleBody {
