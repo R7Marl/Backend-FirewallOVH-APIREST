@@ -19,8 +19,10 @@ i18n
     preload: ["en", "es"],
     detection: {
       order: ["querystring", "cookie", "header"],
-      lookupHeader: "accept-language",
+      lookupHeader: "content-language",
+      lookupCookie: "i18next",
       caches: ["cookie"],
+      cookieOptions: { path: "/", sameSite: "Lax", maxAge: 365 * 24 * 60 * 60 },
     },
     supportedLngs: ["en", "es"],
     nonExplicitSupportedLngs: true,
@@ -31,10 +33,6 @@ const app = express();
 
 app.use(express.json());
 app.use(handle(i18n));
-
-app.use((req, res, next) => {
-  console.log("requested lang: " + req.language);
-});
 
 app.use(
   cors({

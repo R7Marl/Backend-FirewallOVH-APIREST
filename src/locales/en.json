@@ -23,5 +23,17 @@
   },
   "validation": {
     "error": "Validation error"
+  },
+  "server": {
+    "no_servers": "No servers associated with this user.",
+    "not_found": "Server not found or you do not have access.",
+    "error_fetch": "Error fetching servers associated with this user.",
+    "error_fetch_one": "Error fetching the server.",
+    "error_create": "Error creating server.",
+    "error_delete": "Error deleting server.",
+    "error_fetch_all": "Error fetching all servers.",
+    "ip_in_use": "The IP is already in use by another server.",
+    "id_required": "The server ID is required.",
+    "deleted_success": "Server successfully deleted."
   }
 }

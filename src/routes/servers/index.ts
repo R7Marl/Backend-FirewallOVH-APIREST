@@ -4,11 +4,26 @@ import {
   addGameRule,
   enableGameFirewall,
   bulkDeleteGameRule,
-} from "../../controllers/game.controllers.js";
-import { getFirewall, addFirewallRule, deleteFirewallRule, deleteFirewallGameRule } from "../../controllers/fw.controllers.js";
-import { createServer, deleteServer, getAllServers, getServerById, getServerByUser } from "../../controllers/servers.controller.js";
-import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware.js";
-import { getNetworkStatistics } from "../../controllers/network.controller.js";
+} from "@/controllers/game.controllers.js";
+import {
+  getFirewall,
+  addFirewallRule,
+  deleteFirewallRule,
+  deleteFirewallGameRule,
+} from "../../controllers/fw.controllers.js";
+
+import {
+  createServer,
+  deleteServer,
+  getAllServers,
+  getServerById,
+  getServerByUser,
+} from "@/controllers/servers";
+
+import { adminMiddleware, authMiddleware } from "@/middlewares/auth";
+
+import { getNetworkStatistics } from "@/controllers/network";
+
 const router = Router();
 //! --------------------------------------- Rutas firewall game --------------------------------------------------- //
 router.get("/getfirewallgame", authMiddleware, getFirewallGame);
@@ -23,7 +38,6 @@ router.get("/getfirewall", authMiddleware, getFirewall);
 router.post("/addfirewallrule", authMiddleware, addFirewallRule);
 router.delete("/deletefirewallrule", authMiddleware, deleteFirewallRule);
 //! --------------------------------------- Fin rutas firewall ----------------------------------------------- //
-
 
 // Network
 
