@@ -5,7 +5,7 @@ import { validateRecaptcha } from "../../common/utils";
 const authRouter = Router();
 
 authRouter.post("/login", login);
-authRouter.post("/register", validateRecaptcha, register);
+authRouter.post("/register", register);
 authRouter.get('/users', adminMiddleware, getUsers);
 authRouter.get('/user', authMiddleware, getUser);
 authRouter.put('/update-password', authMiddleware, updatePassword);
