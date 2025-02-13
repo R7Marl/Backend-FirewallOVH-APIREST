@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { TokenUser } from "../common/types";
-
-export const authMiddleware = (
+import User from "../models/User";
+export const authMiddleware = async (
     req: Request, 
     res: Response, 
     next: NextFunction
@@ -20,11 +19,17 @@ export const authMiddleware = (
     }
 
     try {
-        const decoded = jwt.verify(tokenValue, process.env.SECRET_KEY as string) as TokenUser;
-        req.user = decoded;
+        const decoded = jwt.verify(tokenValue, process.env.SECRET_KEY as string);
+        const user = await User.findOne({ where: { id: decoded.user.id } });
+        if (!user) {
+            res.status(401).json({ message: "No autorizado" });
+            return;
+        }
+        req.user = user;
         next();
     } catch (error: any) {
-        res.status(401).json({ message: "No autorizado" });
+        console.log(error)
+        res.status(401).json({ message: "No autorizadasdasdo" });
         return;
     }
 };

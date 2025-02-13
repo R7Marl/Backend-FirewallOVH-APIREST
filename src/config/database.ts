@@ -2,9 +2,9 @@ import { Sequelize } from 'sequelize';
 import { config } from 'dotenv';
 config();
 const sequelize = new Sequelize(
-process.env.DB_NAME || 'database',
-process.env.DB_USER || 'user',
-process.env.DB_PASSWORD || 'password', {
+process.env.DB_NAME || 'hostly_fw',
+process.env.DB_USER || 'root',
+process.env.DB_PASSWORD || '', {
 host: process.env.DB_HOST || 'localhost',
 port: 3306,
 dialect: 'mysql',
