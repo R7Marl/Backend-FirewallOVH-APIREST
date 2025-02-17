@@ -254,6 +254,31 @@ export const updateName = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
+export const updateUserRole = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.query;
+  const { role } = req.body;
+  if (!role || !id) {
+    res.status(400).json({
+      message: req.t("errors.fields-required"),
+    });
+    return;
+  }
+  try {
+    await User.update({ role: role as "user" | "admin" | "superadmin" }, { where: { id: id as string } });
+    const userUpdated = await User.findOne({ where: { id: id as string } });
+    res.status(200).json({
+      message: req.t("success.role-updated"),
+      user: userUpdated,
+    });
+  } catch (error: any) {
+    console.error("Error in updateUserRole:", error);
+    res.status(500).json({
+      message: req.t("errors.updating-role"),
+      error: error.message,
+    });
+  }
+};
+
 /**
  * Get user by ID
  * @param req - Express request object

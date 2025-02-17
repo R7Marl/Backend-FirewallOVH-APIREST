@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUser, getUsers, login, register, updateName, updatePassword } from "../../controllers/auth.controller";
+import { getUser, getUsers, login, register, updateName, updatePassword, updateUserRole } from "../../controllers/auth.controller";
 import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware";
 import { validateRecaptcha } from "../../common/utils";
 const authRouter = Router();
@@ -10,4 +10,5 @@ authRouter.get('/users', adminMiddleware, getUsers);
 authRouter.get('/user', authMiddleware, getUser);
 authRouter.put('/update-password', authMiddleware, updatePassword);
 authRouter.put('/update-name', authMiddleware, updateName);
+authRouter.put('/update-role', adminMiddleware, updateUserRole);
 export default authRouter;
