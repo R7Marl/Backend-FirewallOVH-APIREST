@@ -31,6 +31,7 @@ i18n
 const app = express();
 app.use(handle(i18n));
 app.use(express.json());
+//app.use(cors())
 app.use(cors({
     origin: 'https://firewall.hostly.network',
     credentials: true,
