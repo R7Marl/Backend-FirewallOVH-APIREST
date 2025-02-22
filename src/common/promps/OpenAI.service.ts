@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
 dotenv.config();
-export const doMessage = async (message) => {
+export const doMessage = async (message: string): Promise<any> => {
     const prompWithoutMessage = `
 Toma como base este objeto
 {ports: { from: startport, to: endport }},

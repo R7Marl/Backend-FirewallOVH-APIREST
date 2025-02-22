@@ -1,0 +1,39 @@
+{
+    "errors": {
+      "unauthorized": "No autorizado",
+      "fields-required": "Todos los campos son obligatorios",
+      "internal": "Error interno del servidor",
+      "invalid-credentials": "Credenciales inválidas",
+      "rate-limit": "Demasiados intentos de inicio de sesión. Intente nuevamente más tarde",
+      "incorrect-old-password": "Contraseña antigua incorrecta",
+      "new-password-same-as-old": "La nueva contraseña debe ser diferente de la antigua",
+      "provide-all-fields": "Debe proporcionar todos los campos",
+      "registering-user": "Error al registrar usuario",
+      "fetching-users": "Error al obtener usuarios",
+      "updating-password": "Error al actualizar la contraseña",
+      "updating-name": "Error al actualizar el nombre",
+      "already-exists": "El nombre de usuario ya fue registrado",
+      "not-authorized": "No estás autorizado"
+    },
+    "success": {
+      "login": "Inicio de sesión exitoso",
+      "user-registered": "Usuario registrado exitosamente",
+      "password-updated": "Contraseña actualizada exitosamente",
+      "name-updated": "Nombre actualizado exitosamente"
+    },
+    "validation": {
+      "error": "Error de validación"
+    },
+    "server": {
+      "no_servers": "No hay servidores asociados a este usuario.",
+      "not_found": "Servidor no encontrado o no tienes acceso.",
+      "error_fetch": "Error al obtener servidores asociados a este usuario.",
+      "error_fetch_one": "Error al obtener el servidor.",
+      "error_create": "Error al crear servidor.",
+      "error_delete": "Error al eliminar servidor.",
+      "error_fetch_all": "Error al obtener todos los servidores.",
+      "ip_in_use": "La IP ya está en uso por otro servidor.",
+      "id_required": "El ID del servidor es requerido.",
+      "deleted_success": "Servidor eliminado correctamente."
+    }
+  }

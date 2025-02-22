@@ -4,12 +4,25 @@ import {
   addGameRule,
   enableGameFirewall,
   bulkDeleteGameRule,
-} from "../../controllers/game.controllers.js";
-import { getFirewall, addFirewallRule, deleteFirewallRule, deleteFirewallGameRule } from "../../controllers/fw.controllers.js";
-import { createServer, deleteServer, getAllServers, getServerById, getServerByUser } from "../../controllers/servers.controller.js";
-import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware.js";
-import { getNetworkStatistics } from "../../controllers/network.controller.js";
+} from "../../controllers/game.controllers";
+import {
+  getFirewall,
+  addFirewallRule,
+  deleteFirewallRule,
+  deleteFirewallGameRule
+} from "../../controllers/fw.controllers";
+import {
+  createServer,
+  deleteServer,
+  getAllServers,
+  getServerById,
+  getServerByUser
+} from "../../controllers/servers.controller";
+import { adminMiddleware, authMiddleware } from "../../middleware/auth.middleware";
+import { getNetworkStatistics } from "../../controllers/network.controller";
+
 const router = Router();
+
 //! --------------------------------------- Rutas firewall game --------------------------------------------------- //
 router.get("/getfirewallgame", authMiddleware, getFirewallGame);
 router.post("/addgamerule", authMiddleware, addGameRule);
@@ -24,16 +37,14 @@ router.post("/addfirewallrule", authMiddleware, addFirewallRule);
 router.delete("/deletefirewallrule", authMiddleware, deleteFirewallRule);
 //! --------------------------------------- Fin rutas firewall ----------------------------------------------- //
 
-
 // Network
-
 router.get("/getNetworkStatistics", authMiddleware, getNetworkStatistics);
 
 // Admin
-
 router.get("/getServerByUser", authMiddleware, getServerByUser);
 router.get("/getServerById", authMiddleware, getServerById);
 router.get("/allServers", adminMiddleware, getAllServers);
 router.post("/createServer", adminMiddleware, createServer);
 router.delete("/deleteServer", adminMiddleware, deleteServer);
+
 export default router;
