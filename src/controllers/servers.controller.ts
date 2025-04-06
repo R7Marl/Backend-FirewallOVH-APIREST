@@ -78,7 +78,7 @@ export const createServer = async (req: Request, res: Response): Promise<void> =
 export const deleteServer = async (req: Request, res: Response): Promise<void> => {
     try {
         const { serverId } = req.params;
-        const { id: userId } = req?.user as { id: string };
+        const { id: userId } = req?.user;
 
         const deleted = await Server.destroy({
             where: { id: serverId, userId }
